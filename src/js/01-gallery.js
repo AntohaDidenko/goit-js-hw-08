@@ -21,7 +21,7 @@ gallery.innerHTML = makeGallery;
 new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
   captionDelay: 250,
-  captionPosition: 'top',
+  captionPosition: 'bottom',
   close: false,
   showCounter: false,
 });

@@ -6,9 +6,11 @@ const NAME_LOCAL_STORAGE = 'videoplayer-current-time';
 player.on('timeupdate', throttle(onPlay, 1000));
 
 function onPlay(item) {
-  localStorage.setItem(NAME_LOCAL_STORAGE, JSON.stringify(item));
+  localStorage.setItem(NAME_LOCAL_STORAGE, item.seconds);
 }
 
-const getSeconds = JSON.parse(localStorage.getItem(NAME_LOCAL_STORAGE));
+const getSeconds = localStorage.getItem(NAME_LOCAL_STORAGE);
 
-player.setCurrentTime(getSeconds.seconds);
+if (getSeconds) {
+  player.setCurrentTime(getSeconds);
+}
