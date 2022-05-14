@@ -20,7 +20,13 @@ function onFormData(e) {
 
 function onSubmitForm(e) {
   e.preventDefault();
-  console.log(JSON.parse(localStorage.getItem(STORAGE_KEY)));
+  const parseData = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  const email = e.currentTarget.elements.email.value;
+  const message = e.currentTarget.elements.message.value;
+  if (!email || !message) {
+    return alert('Please complete all fields!');
+  }
+  console.log(parseData);
   e.currentTarget.reset();
   localStorage.removeItem(STORAGE_KEY);
 }
@@ -29,9 +35,11 @@ function dataFromLocalStorage() {
   if (!localStorage.getItem(STORAGE_KEY)) {
     return;
   }
+
   const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
   if (data) {
-    data.email ? (email.value = data.email) : '';
-    data.message ? (message.value = data.message) : '';
+    email.value = data.email;
+    message.value = data.message;
   }
 }
