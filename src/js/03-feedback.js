@@ -1,45 +1,42 @@
-const throttle = require('lodash.throttle');
-const form = document.querySelector('form');
-const email = document.querySelector('.feedback-form input');
-const message = document.querySelector('.feedback-form textarea');
+import throttle from 'lodash.throttle';
+
+const form = document.querySelector('.feedback-form');
 const STORAGE_KEY = 'feedback-form-state';
 
 form.addEventListener('input', throttle(onFormData, 500));
-form.addEventListener('submit', onSubmitForm);
+form.addEventListener('submit', onFormsubmit);
 
-dataFromLocalStorage();
+const getData = localStorage.getItem(STORAGE_KEY);
+const parseData = JSON.parse(getData);
 
-const formData = localStorage.getItem(STORAGE_KEY)
-  ? JSON.parse(localStorage.getItem(STORAGE_KEY))
-  : {};
-
-function onFormData(e) {
-  formData[e.target.name] = e.target.value;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+if (parseData) {
+  form.email.value = parseData.email;
+  form.message.value = parseData.message;
 }
 
-function onSubmitForm(e) {
-  e.preventDefault();
-  const parseData = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  const email = e.currentTarget.elements.email.value;
-  const message = e.currentTarget.elements.message.value;
+function onFormData() {
+  const email = form.email.value;
+  const message = form.message.value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ email, message }));
+}
+
+function onFormsubmit(evt) {
+  evt.preventDefault();
+
+  const email = evt.currentTarget.elements.email.value;
+  const message = evt.currentTarget.elements.message.value;
+
   if (!email || !message) {
     return alert('Please complete all fields!');
   }
-  console.log(parseData);
-  e.currentTarget.reset();
+
+  const data = {
+    email,
+    message,
+  };
+
+  console.log(data);
+
   localStorage.removeItem(STORAGE_KEY);
-}
-
-function dataFromLocalStorage() {
-  if (!localStorage.getItem(STORAGE_KEY)) {
-    return;
-  }
-
-  const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
-
-  if (data) {
-    data.email ? (email.value = data.email) : '';
-    data.message ? (message.value = data.message) : '';
-  }
+  evt.currentTarget.reset();
 }
